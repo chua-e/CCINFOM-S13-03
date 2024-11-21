@@ -27,7 +27,7 @@ DROP TABLE IF EXISTS `character_record`;
 CREATE TABLE `character_record` (
   `char_name` varchar(50) DEFAULT NULL,
   `char_id` int DEFAULT NULL,
-  `rarity` varchar(50) DEFAULT NULL,
+  `rarity` enum('S', 'A', 'B') DEFAULT NULL,
   `base_probability` decimal(5,4) DEFAULT NULL,
   `ability_type` enum('Fire', 'Water', 'Air', 'Earth', 'Electric') DEFAULT NULL,
   `class` enum('Sword', 'Archer', 'Healer', 'Catalyst', 'Shield') DEFAULT NULL
@@ -39,23 +39,23 @@ CREATE TABLE `character_record` (
 --
 
 INSERT INTO character_record(char_name, char_id, rarity, base_probability, ability_type, class) values 
-('char1', 001, 'S-tier', 0.1, 'Fire', 'Archer'), 
-('char2', 002, 'S-tier', 0.1, 'Water', 'Healer'), 
-('char3', 003, 'A-tier', 0.3, 'Earth', 'Catalyst'),
-('char4', 004, 'A-tier', 0.3, 'Fire', 'Healer'), 
-('char5', 005, 'A-tier', 0.3, 'Water', 'Sword'), 
-('char6', 006, 'A-tier', 0.3, 'Electric', 'Shield'), 
-('char7', 007, 'B-tier', 0.6, 'Fire', 'Sword'), 
-('char8', 008, 'B-tier', 0.6, 'Water', 'Archer'), 
-('char9', 009, 'B-tier', 0.6, 'Earth', 'Healer'), 
-('char10', 010, 'B-tier', 0.6, 'Electric', 'Archer'), 
-('char11', 011, 'B-tier', 0.6, 'Electric', 'Sword'), 
-('char12', 012, 'B-tier', 0.6, 'Fire', 'Catalyst'),
-('char13', 013, 'A-tier', 0.3, 'Earth', 'Archer'),
-('char14', 014, 'S-tier', 0.1, 'Earth', 'Shield'), 
-('char15', 015, 'B-tier', 0.6, 'Water', 'Catalyst'),
-('char16', 016, 'S-tier', 0.1, 'Electric', 'Catalyst'), 
-('char17', 017, 'B-tier', 0.6, 'Fire', 'Shield');
+('char1', 001, 'S', 0.1, 'Fire', 'Archer'), 
+('char2', 002, 'S', 0.1, 'Water', 'Healer'), 
+('char3', 003, 'A', 0.3, 'Earth', 'Catalyst'),
+('char4', 004, 'A', 0.3, 'Fire', 'Healer'), 
+('char5', 005, 'A', 0.3, 'Water', 'Sword'), 
+('char6', 006, 'A', 0.3, 'Electric', 'Shield'), 
+('char7', 007, 'B', 0.6, 'Fire', 'Sword'), 
+('char8', 008, 'B', 0.6, 'Water', 'Archer'), 
+('char9', 009, 'B', 0.6, 'Earth', 'Healer'), 
+('char10', 010, 'B', 0.6, 'Electric', 'Archer'), 
+('char11', 011, 'B', 0.6, 'Electric', 'Sword'), 
+('char12', 012, 'B', 0.6, 'Fire', 'Catalyst'),
+('char13', 013, 'A', 0.3, 'Earth', 'Archer'),
+('char14', 014, 'S', 0.1, 'Earth', 'Shield'), 
+('char15', 015, 'B', 0.6, 'Water', 'Catalyst'),
+('char16', 016, 'S', 0.1, 'Electric', 'Catalyst'), 
+('char17', 017, 'B', 0.6, 'Fire', 'Shield');
 
 LOCK TABLES `character_record` WRITE;
 /*!40000 ALTER TABLE `character_record` DISABLE KEYS */;
@@ -83,17 +83,17 @@ CREATE TABLE `ingame_transaction_record` (
 --
 
 INSERT INTO ingame_transaction_record (player_id, pull_id, pulltime, pity_counter, pull_cost) values
-(12306428, 1, current_date(), 20, 100),
-(12345678, 4, DATE'2024/10/09', 19, 100), 
-(12399999, 16, DATE'2024-04-22', 13, 100),
-(12306428, 74, DATE'2024-06-04', 15, 100), 
-(12478234, 200, DATE'2024-07-09', 16, 100), 
-(12312123, 23, DATE'2024-09-28', 18, 100), 
-(11902304, 22, DATE'2024-11-03', 19, 100), 
-(12482349, 29, DATE'2024-03-30', 12, 100), 
-(12309247, 12, DATE'2024-05-11', 14, 100), 
-(12039405, 7, DATE'2024-08-19', 17, 100), 
-(12111123, 62, DATE'2024-08-15', 17, 100);
+(10000007, 1, current_date(), 20, 100),
+(10000001, 4, DATE'2024/10/09', 19, 100), 
+(10000002, 16, DATE'2024-04-22', 13, 100),
+(10000003, 74, DATE'2024-06-04', 15, 100), 
+(10000004, 200, DATE'2024-07-09', 16, 100), 
+(10000005, 23, DATE'2024-09-28', 18, 100), 
+(10000006, 22, DATE'2024-11-03', 19, 100), 
+(10000007, 29, DATE'2024-03-30', 12, 100), 
+(10000008, 12, DATE'2024-05-11', 14, 100), 
+(10000009, 7, DATE'2024-08-19', 17, 100), 
+(10000010, 62, DATE'2024-08-15', 17, 100);
 
 LOCK TABLES `ingame_transaction_record` WRITE;
 /*!40000 ALTER TABLE `ingame_transaction_record` DISABLE KEYS */;
@@ -119,16 +119,16 @@ CREATE TABLE `player_items_record` (
 --
 
 INSERT INTO player_items_record (player_id, char_id, char_duplicates) values
-(12345678, 1, 0), 
-(12399999, 3, 5),
-(12306428, 4, 2), 
-(12478234, 5, 2), 
-(12312123, 3, 2), 
-(11902304, 7, 4), 
-(12482349, 0, 1), 
-(12309247, 3, 2), 
-(12039405, 9, 3), 
-(12111123, 2, 10);
+(10000001, 1, 0), 
+(10000002, 3, 5),
+(10000003, 4, 2), 
+(10000004, 5, 2), 
+(10000005, 3, 2), 
+(10000006, 7, 4), 
+(10000007, 0, 1), 
+(10000008, 3, 2), 
+(10000009, 9, 3), 
+(10000010, 2, 10);
 
 LOCK TABLES `player_items_record` WRITE;
 /*!40000 ALTER TABLE `player_items_record` DISABLE KEYS */;
