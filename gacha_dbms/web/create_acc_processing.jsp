@@ -157,7 +157,6 @@
                             status= 2;
                         }
                         else {
-                            out.println("creating");
                             pstmt = conn.prepareStatement("SELECT MAX(player_id)+1 AS newID FROM player_record");
                             rst = pstmt.executeQuery();
                             while(rst.next() ){
@@ -165,22 +164,17 @@
                             }
                             pstmt = conn.prepareStatement("INSERT INTO player_record (player_id, player_name, player_join_date, account_bal) "
                             + "VALUES (?, ?, ?, ?)");
-                            out.println("creating");
 
                             pstmt.setInt(1, player_id);
                             pstmt.setString(2, v_player_name);
-                                    out.println("creating");
 
                             player_join_date = java.sql.Date.valueOf(LocalDate.now());
                             pstmt.setDate(3, player_join_date);
-                                    out.println("creating");
 
                             account_bal = 0;
                             pstmt.setInt(4, account_bal);
-                                    out.println("creating");
 
                             pstmt.executeUpdate();
-                                    out.println("creating");
 
                             pstmt.close();
                             conn.close();
@@ -197,6 +191,8 @@
                     }
     
             if (status == 4) {
+                request.setAttribute("player_name", v_player_name);
+
             %>
                 <h1>Account Creation Successful!</h1>
                 <h2>Welcome, ${player_name}!</h2>
