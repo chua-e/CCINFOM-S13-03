@@ -1,5 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="java.util.*, playermanagement.*, java.sql.*, java.time.LocalDate" %>
+<%@page import="java.util.*, java.sql.*, java.time.LocalDate" %>
 <!DOCTYPE html>
 
 <html>
@@ -124,14 +124,7 @@
     <body>
         <form action="player.html">
             <%
-<<<<<<< HEAD
-//                //out.println() lines are for debugging
-//                String v_player_name = request.getParameter("player_name");
-//                //out.println("Received player_name: " + v_player_name + ", ");
-//                rec.player_name = v_player_name;
-//                //out.println("Assigning player name as: " + rec.player_name + ", ");
-//                int status = rec.register_player();
-//                //out.println("Status: "+status);
+
                 int player_id = 10000000;
     String player_name;
     java.sql.Date player_join_date;
@@ -192,13 +185,12 @@
             status = 0;
     }
     
-=======
                 //out.println() lines are for debugging
                 String v_player_name = request.getParameter("player_name");
                 out.println("Received player_name: " + v_player_name + ", ");
-                rec.player_name = v_player_name;
-                out.println("Assigning player name as: " + rec.player_name + ", ");
-                int status = 0;
+                player_name = v_player_name;
+                out.println("Assigning player name as: " + player_name + ", ");
+                status = 0;
             
                 try {
             
@@ -223,7 +215,6 @@
                 }
                 out.println("Status: "+ status);
                 
->>>>>>> d02d1e69294a2fa23fca9d02748cb8174ebe7f83
             if (status == 1) {
             %>
                 <h1>Account Creation Successful!</h1>
