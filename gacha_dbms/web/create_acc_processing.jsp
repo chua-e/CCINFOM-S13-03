@@ -125,99 +125,81 @@
         <form action="player.html">
             <%
 
-           int player_id = 10000000;
-    String player_name;
-    java.sql.Date player_join_date;
-    int account_bal;
-    int status;
+                           int player_id = 0;
+                String player_name;
+                java.sql.Date player_join_date;
+                int account_bal; 
     
-    
-    //arrays
-    ArrayList<Integer> playerID_list = new ArrayList<> ();
-    ArrayList<String> playerName_list = new ArrayList<> ();
-    ArrayList<java.sql.Date> playerJoinDate_list = new ArrayList<> ();
-    ArrayList<Integer> accBal_list = new ArrayList<> ();
-
-                    try{
-                    
-            
-            Connection conn;
-            //change the last param in getConnection() to your MySQL password :)
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gacha", "root", "root");
-            System.out.print("Connection Successful!");
-            
-            PreparedStatement pstmt = conn.prepareStatement("SELECT MAX(player_id)+1 AS newID FROM player_record");
-            ResultSet rst = pstmt.executeQuery();
-            while(rst.next()){
-                player_id = rst.getInt("newID");
-            }
-            
-            String v_player_name = request.getParameter("player_name");
-            player_name = v_player_name;
-            request.setAttribute("player_name", player_name);
-            
-            pstmt = conn.prepareStatement("INSERT INTO player_record (player_id, player_name, player_join_date, account_bal) "
-                    + "VALUES (?, ?, ?, ?)");
-            pstmt.setInt(1, player_id);
-            pstmt.setString(2, player_name);
-            
-            player_join_date = java.sql.Date.valueOf(LocalDate.now());
-            pstmt.setDate(3, player_join_date);
-            
-            account_bal = 0;
-            pstmt.setInt(4, account_bal);
-            
-            pstmt.executeUpdate();
-            
-            rst.close();
-            pstmt.close();
-            conn.close();
-            status = 1;
-            
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-            status = 0;
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace(); 
-            status = 0;
-    }
-    
-                //out.println() lines are for debugging
                 String v_player_name = request.getParameter("player_name");
                 out.println("Received player_name: " + v_player_name + ", ");
                 player_name = v_player_name;
                 out.println("Assigning player name as: " + player_name + ", ");
-                status = 0;
-            
-                try {
-            
-                    Class.forName("com.mysql.cj.jdbc.Driver");
-                    Connection conn;
-                    //change the last param in getConnection() to your MySQL password 🙂
-                    conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gacha", "root", "root");
-                    System.out.print("Connection Successful!");
-            
-                    PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM player_record");
-                    ResultSet rst = pstmt.executeQuery();
-            
-                    conn.close();
-            
-                    status = 1;
-            
-                } catch (Exception e){
-                    System.out.println(e.getMessage());
-                    e.printStackTrace();
-            
-                    status = 2;
-                }
-                out.println("Status: "+ status);
+                int status = 0;
                 
-            if (status == 1) {
+                System.out.print("login player function reached");
+                String query = "SELECT COUNT(*) FROM player_record WHERE player_name = ?";
+    
+                    try{
+                    
+                        Class.forName("com.mysql.cj.jdbc.Driver");
+                        Connection conn;
+            //change the last param in getConnection() to your MySQL password 🙂
+                        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gacha", "root", "root");
+                        System.out.print("Connection Successful!");
+                        PreparedStatement pstmt = conn.prepareStatement(query); 
+                        pstmt.setString(1, v_player_name);
+            
+                        ResultSet rst = pstmt.executeQuery();
+                        if (rst.next() && rst.getInt(1) > 0){
+                            System.out.println("There is a line");
+                            pstmt.close();
+                            conn.close();
+                            status= 2;
+                        }
+                        else {
+                            pstmt = conn.prepareStatement("SELECT MAX(player_id)+1 AS newID FROM player_record");
+                            rst = pstmt.executeQuery();
+                            while(rst.next() ){
+                                player_id = rst.getInt("newID");
+                            }
+                            pstmt = conn.prepareStatement("INSERT INTO player_record (player_id, player_name, player_join_date, account_bal) "
+                            + "VALUES (?, ?, ?, ?)");
+
+                            pstmt.setInt(1, player_id);
+                            pstmt.setString(2, v_player_name);
+
+                            player_join_date = java.sql.Date.valueOf(LocalDate.now());
+                            pstmt.setDate(3, player_join_date);
+
+                            account_bal = 1000;
+                            pstmt.setInt(4, account_bal);
+
+                            pstmt.executeUpdate();
+
+                            pstmt.close();
+                            conn.close();
+                            status = 4;
+                        }
+                    } catch (SQLException e) {
+                        System.out.println(e.getMessage());
+                        e.printStackTrace();
+                        status = -1;
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                        e.printStackTrace(); 
+                        status = -1;
+                    }
+    
+            if (status == 4) {
+                request.setAttribute("player_name", v_player_name);
+
             %>
                 <h1>Account Creation Successful!</h1>
                 <h2>Welcome, ${player_name}!</h2>
+            <%
+                } else if (status == 2 ) {
+            %>
+                <h1>Account with the same name Exists</h1>
             <%
                 } else {
             %>

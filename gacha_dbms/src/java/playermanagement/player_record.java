@@ -87,7 +87,7 @@ public class player_record {
             player_join_date = java.sql.Date.valueOf(LocalDate.now());
             pstmt.setDate(3, player_join_date);
             
-            account_bal = 0;
+            account_bal = 1000;
             pstmt.setInt(4, account_bal);
             
             pstmt.executeUpdate();

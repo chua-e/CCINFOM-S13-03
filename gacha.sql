@@ -25,8 +25,8 @@ DROP TABLE IF EXISTS `character_record`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `character_record` (
-  `char_name` varchar(50) DEFAULT NULL,
   `char_id` int DEFAULT NULL,
+  `char_name` varchar(50) DEFAULT NULL,
   `rarity` enum('S', 'A', 'B') DEFAULT NULL,
   `base_probability` decimal(5,4) DEFAULT NULL,
   `ability_type` enum('Fire', 'Water', 'Air', 'Earth', 'Electric') DEFAULT NULL,
@@ -38,24 +38,24 @@ CREATE TABLE `character_record` (
 -- Dumping data for table `character_record`
 --
 
-INSERT INTO character_record(char_name, char_id, rarity, base_probability, ability_type, class) values 
-('Lebron James', 001, 'S', 0.1, 'Fire', 'Archer'), 
-('DuRuo', 002, 'S', 0.1, 'Water', 'Healer'), 
-('Kels', 003, 'A', 0.3, 'Earth', 'Catalyst'),
-('Jhin', 004, 'A', 0.3, 'Fire', 'Healer'), 
-('Dreya', 005, 'A', 0.3, 'Water', 'Sword'), 
-('Deren', 006, 'A', 0.3, 'Electric', 'Shield'), 
-('Plygia', 007, 'B', 0.6, 'Fire', 'Sword'), 
-('Hecate', 008, 'B', 0.6, 'Water', 'Archer'), 
-('Yao', 009, 'B', 0.6, 'Earth', 'Healer'), 
-('Zephyr', 010, 'B', 0.6, 'Electric', 'Archer'), 
-('Sage', 011, 'B', 0.6, 'Electric', 'Sword'), 
-('Omen', 012, 'B', 0.6, 'Fire', 'Catalyst'),
-('Enfer', 013, 'A', 0.3, 'Earth', 'Archer'),
-('Heimerdinger', 014, 'S', 0.1, 'Earth', 'Shield'), 
-('Cards', 015, 'B', 0.6, 'Water', 'Catalyst'),
-('Tiger Woods', 016, 'S', 0.1, 'Electric', 'Catalyst'), 
-('Mitsuki', 017, 'B', 0.6, 'Fire', 'Shield');
+INSERT INTO character_record(char_id, char_name, rarity, base_probability, ability_type, class) values 
+(001,'Lebron James', 'S', 0.1, 'Fire', 'Archer'), 
+(002,'DuRuo', 'S', 0.1, 'Water', 'Healer'), 
+(003,'Kels', 'A', 0.3, 'Earth', 'Catalyst'),
+(004, 'Jhin', 'A', 0.3, 'Fire', 'Healer'), 
+(005, 'Dreya', 'A', 0.3, 'Water', 'Sword'), 
+(006, 'Deren', 'A', 0.3, 'Electric', 'Shield'), 
+(007, 'Plygia', 'B', 0.6, 'Fire', 'Sword'), 
+(008, 'Hecate', 'B', 0.6, 'Water', 'Archer'), 
+(009, 'Yao', 'B', 0.6, 'Earth', 'Healer'), 
+(010, 'Zephyr', 'B', 0.6, 'Electric', 'Archer'), 
+(011, 'Sage', 'B', 0.6, 'Electric', 'Sword'), 
+(012, 'Omen', 'B', 0.6, 'Fire', 'Catalyst'),
+(013, 'Enfer', 'A', 0.3, 'Earth', 'Archer'),
+(014, 'Heimerdinger', 'S', 0.1, 'Earth', 'Shield'), 
+(015, 'Cards', 'B', 0.6, 'Water', 'Catalyst'),
+(016, 'Tiger Woods', 'S', 0.1, 'Electric', 'Catalyst'), 
+(017, 'Mitsuki', 'B', 0.6, 'Fire', 'Shield');
 
 LOCK TABLES `character_record` WRITE;
 /*!40000 ALTER TABLE `character_record` DISABLE KEYS */;
