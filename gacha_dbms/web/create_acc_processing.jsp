@@ -140,7 +140,17 @@
 
                     try{
                     
+<<<<<<< Updated upstream
                     Class.forName("com.mysql.cj.jdbc.Driver");
+=======
+                        Class.forName("com.mysql.cj.jdbc.Driver");
+                        Connection conn;
+            //change the last param in getConnection() to your MySQL password 🙂
+                        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gacha", "root", "root");
+                        System.out.print("Connection Successful!");
+                        PreparedStatement pstmt = conn.prepareStatement(query); 
+                        pstmt.setString(1, v_player_name);
+>>>>>>> Stashed changes
             
             Connection conn;
             //change the last param in getConnection() to your MySQL password :)

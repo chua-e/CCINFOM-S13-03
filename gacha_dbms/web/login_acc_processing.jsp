@@ -100,11 +100,17 @@
         <jsp:useBean id="rec" class="playermanagement.player_record" scope="session" />
         <form action="player.html">
             <%
+                
+                int player_id = 0;
+                int acc_bal = 0;
+                
                 //out.println() lines are for debugging
                 String v_player_name = request.getParameter("player_name");
                 out.println("Received player_name: " + v_player_name + ", ");
                 rec.player_name = v_player_name;
                 out.println("Assigning player name as: " + rec.player_name + ", ");
+                
+                
                 int status = 0;
                 
                 System.out.print("login player function reached");
@@ -114,10 +120,17 @@
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection conn;
             //change the last param in getConnection() to your MySQL password 🙂
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gacha", "root", "pass");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gacha", "root", "root");
             System.out.print("Connection Successful!");
             PreparedStatement pstmt = conn.prepareStatement(query); 
             pstmt.setString(1, v_player_name);
+            
+            rec.loadPlayers();
+            player_id = rec.getPlayerID(rec.player_name);
+            System.out.println("player_id: " + player_id);
+            
+            acc_bal = rec.getAccBal(rec.player_name);
+            System.out.println("acc_bal: " + acc_bal);
             
             ResultSet rst = pstmt.executeQuery();
             if (rst.next() && rst.getInt(1) > 0){
@@ -145,9 +158,11 @@
                 out.println("Status: "+ status);
                 
             if (status == 1) {
-            %>
-                <h1>Account Login Successful!</h1>
-            <%
+                session.setAttribute("player_id", player_id);
+                session.setAttribute("acc_bal", acc_bal);
+                //response.sendRedirect("play_page.jsp");
+                response.sendRedirect("play_test.jsp");
+                
                 } else {
             %>
                 <h1>login: Account Does not Exist</h1>

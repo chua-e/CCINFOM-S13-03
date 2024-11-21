@@ -9,11 +9,13 @@
 <%@page import="java.util.*,java.sql.*, java.time.LocalDate" %>
 <%
     Integer player_id = (Integer) session.getAttribute("player_id");
-    Integer account_bal = (Integer) session.getAttribute("account_bal");
+    Integer acc_bal = (Integer) session.getAttribute("acc_bal");
+    
+    System.out.println("player_id in play_page: " + player_id);
     
     //player 
     int status = 0;
-    int balance = account_bal;
+    int balance = acc_bal;
     
     //characters
     String char_name;
@@ -31,11 +33,10 @@
     try {
         Class.forName("com.mysql.cj.jdbc.Driver");
         Connection conn;
-        // Connect to your database
-        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gacha", "root", "Geometry@14");
+        // add pw here
+        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gacha", "root", "root");
         System.out.println("Connection Successful!");
 
-        // SQL query to retrieve all rows from the player_record table
         PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM character_record");
         ResultSet rst = pstmt.executeQuery();
         
@@ -236,7 +237,7 @@
 </head>
 <body>
   <h1>Gacha System</h1>
-  <h2>Player ID: <%= player_id %>, Balance: <%= account_bal %></h2>
+  <h2>Player ID: <%= player_id %>, Balance: <%= acc_bal %></h2>
   <a href="inventory.html" class="button">Inventory</a>
   <button id="gachaButton">Roll!</button>
     
@@ -256,6 +257,7 @@
   <script>
     document.getElementById("gachaButton").addEventListener("click", rollGacha);
     
+    let accBal = <%= acc_bal %>;
     const characters = [
         <% for (int i = 0; i < charID_list.size(); i++) { %>
         {
@@ -278,15 +280,19 @@
     const resultContainer = document.getElementById("result");
     const loadingGif = document.getElementById("loadingGif");
 
-    // Clear result and show loading GIF
+    if (accBal < 100) {
+        alert("Insufficient balance! You need at least 100 to roll.");
+        return;
+    }
+    
+    accBal -= 100;
     resultContainer.innerHTML = "";
     loadingGif.classList.add("active");
 
-    // Simulate a delay for the animation
+    
     setTimeout(() => {
         loadingGif.classList.remove("active");
 
-        // Determine the result based on probabilities
         const randomValue = Math.random();
         let cumulativeProbability = 0;
 
@@ -307,7 +313,7 @@
                     <p>Character: ${selectedCharacter.name}</p>
                     <p>Rarity: ${selectedCharacter.rarity}</p>
                     <p>Ability Type: ${selectedCharacter.abilityType}</p>
-                    <p>Class: ${selectedCharacter.clasabilsType}</p>
+                    <p>Class: ${selectedCharacter.classType}</p>
                 </div>
             `;
         } else {
