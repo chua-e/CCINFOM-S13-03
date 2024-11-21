@@ -29,8 +29,8 @@ CREATE TABLE `character_record` (
   `char_id` int DEFAULT NULL,
   `rarity` varchar(50) DEFAULT NULL,
   `base_probability` decimal(5,4) DEFAULT NULL,
-  `ability_type` varchar(50) DEFAULT NULL,
-  `class` varchar(50) DEFAULT NULL
+  `ability_type` enum('Fire', 'Water', 'Air', 'Earth', 'Electric') DEFAULT NULL,
+  `class` enum('Sword', 'Archer', 'Healer', 'Catalyst', 'Shield') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -44,17 +44,17 @@ INSERT INTO character_record(char_name, char_id, rarity, base_probability, abili
 ('char3', 003, 'A-tier', 0.3, 'Earth', 'Catalyst'),
 ('char4', 004, 'A-tier', 0.3, 'Fire', 'Healer'), 
 ('char5', 005, 'A-tier', 0.3, 'Water', 'Sword'), 
-('char6', 006, 'A-tier', 0.3, 'Ice', 'Shield'), 
+('char6', 006, 'A-tier', 0.3, 'Electric', 'Shield'), 
 ('char7', 007, 'B-tier', 0.6, 'Fire', 'Sword'), 
 ('char8', 008, 'B-tier', 0.6, 'Water', 'Archer'), 
 ('char9', 009, 'B-tier', 0.6, 'Earth', 'Healer'), 
-('char10', 010, 'B-tier', 0.6, 'Ice', 'Archer'), 
-('char11', 011, 'B-tier', 0.6, 'Ice', 'Sword'), 
+('char10', 010, 'B-tier', 0.6, 'Electric', 'Archer'), 
+('char11', 011, 'B-tier', 0.6, 'Electric', 'Sword'), 
 ('char12', 012, 'B-tier', 0.6, 'Fire', 'Catalyst'),
 ('char13', 013, 'A-tier', 0.3, 'Earth', 'Archer'),
 ('char14', 014, 'S-tier', 0.1, 'Earth', 'Shield'), 
 ('char15', 015, 'B-tier', 0.6, 'Water', 'Catalyst'),
-('char16', 016, 'S-tier', 0.1, 'Ice', 'Catalyst'), 
+('char16', 016, 'S-tier', 0.1, 'Electric', 'Catalyst'), 
 ('char17', 017, 'B-tier', 0.6, 'Fire', 'Shield');
 
 LOCK TABLES `character_record` WRITE;
