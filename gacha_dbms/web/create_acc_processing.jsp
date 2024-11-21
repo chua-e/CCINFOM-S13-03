@@ -125,7 +125,7 @@
         <form action="player.html">
             <%
 
-                int player_id = 10000000;
+           int player_id = 10000000;
     String player_name;
     java.sql.Date player_join_date;
     int account_bal;
@@ -140,21 +140,10 @@
 
                     try{
                     
-<<<<<<< Updated upstream
-                    Class.forName("com.mysql.cj.jdbc.Driver");
-=======
-                        Class.forName("com.mysql.cj.jdbc.Driver");
-                        Connection conn;
-            //change the last param in getConnection() to your MySQL password 🙂
-                        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gacha", "root", "root");
-                        System.out.print("Connection Successful!");
-                        PreparedStatement pstmt = conn.prepareStatement(query); 
-                        pstmt.setString(1, v_player_name);
->>>>>>> Stashed changes
             
             Connection conn;
             //change the last param in getConnection() to your MySQL password :)
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gacha", "root", "Geometry@14");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gacha", "root", "root");
             System.out.print("Connection Successful!");
             
             PreparedStatement pstmt = conn.prepareStatement("SELECT MAX(player_id)+1 AS newID FROM player_record");
@@ -207,7 +196,7 @@
                     Class.forName("com.mysql.cj.jdbc.Driver");
                     Connection conn;
                     //change the last param in getConnection() to your MySQL password 🙂
-                    conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gacha", "root", "pass");
+                    conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gacha", "root", "root");
                     System.out.print("Connection Successful!");
             
                     PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM player_record");

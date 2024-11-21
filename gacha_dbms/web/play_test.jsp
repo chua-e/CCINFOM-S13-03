@@ -30,12 +30,12 @@
                 session.setAttribute("acc_bal", balance);
             }
 
-            PreparedStatement charStmt = conn.prepareStatement("SELECT * FROM character_record ORDER BY RAND() LIMIT 1");
+            PreparedStatement charStmt = conn.prepareStatement("SELECT * FROM character_record ORDER BY RAND()*base_probability DESC LIMIT 1");
             ResultSet charResult = charStmt.executeQuery();
 
             if (charResult.next()) {
                 gachaResult = String.format(
-                    "Character: %s\n, Rarity: %s\n, Ability Type: %s\n, Class: %s\n",
+                    "Character: %s\n, Rarity: %s-tier\n, Ability Type: %s\n, Class: %s\n",
                     charResult.getString("char_name"),
                     charResult.getString("rarity"),
                     charResult.getString("ability_type"),
@@ -208,6 +208,37 @@
           font-size: 20px;
           margin-bottom: 0px;
   }
+  
+  input[type="submit"] {
+                font-family: "Roboto", sans-serif;
+                font-weight: 700;
+                display: inline-block;
+                margin: 10px;
+                padding: 5px 20px;
+                font-size: 13px;
+                text-decoration: none;
+                color: black;
+                background-color: #FFFFFF;
+                border: none;
+                border-radius: 5px;
+                box-shadow: 0 4px #000000;
+                cursor: pointer;
+                transition: background-color 0.3s, transform 0.2s;
+                text-align: center;
+                outline: 2px dotted #000000;
+            }
+
+            input[type="submit"]:hover {
+                background-color: #e8e8e8;
+                transform: scale(1.05);
+                outline: 2px solid #000000;
+            }
+            
+            input[type="submit"]:active {
+                background-color: #d1d1d1;
+                box-shadow: 0 2px #d1d1d1;
+                transform: translateY(2px);
+            }
 }
 
   </style>
@@ -218,6 +249,15 @@
     <form method="POST">
         <button id="gachaButton" name="rollGacha">Roll!</button>
     </form>
+    
+    <form action="inventory.html">
+        <input type="submit" value="Inventory">
+    </form>
+    
+    <form action="player.html">
+        <input type="submit" value="Return to Player Menu">
+    </form>
+    
     <div class="gachapon-container">
         <div id="result" class="result-container">
             <%= gachaResult %>
