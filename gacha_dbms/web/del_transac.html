@@ -5,7 +5,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
 -->
 <html>
     <head>
-        <title>Delete a Character</title>
+        <title>Delete a Transaction</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -135,11 +135,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
         </style>
     </head>
     <body>
-        <form action="char_del_processing.jsp">
-            <h1>Input character name:</h1>
-            <input type="text" id="char_name" name="char_name" required><br>
-            
-            <input type="submit" value="Delete Character">
+        <form action="delete_transac_processing.jsp">
+            <h1>Input pull ID</h1>
+            <input type="text" id="pull_id" name ="pull_id" required>
+            <input type="submit" value="Delete Transaction">
             <a href="admin.html" class="button">Back</a>
         </form>
     </body>
