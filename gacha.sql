@@ -72,6 +72,7 @@ DROP TABLE IF EXISTS `ingame_transaction_record`;
 CREATE TABLE `ingame_transaction_record` (
   `player_id` int DEFAULT NULL,
   `pull_id` int DEFAULT NULL,
+  `char_id` int DEFAULT NULL,
   `pulltime` date DEFAULT NULL,
   `pity_counter` int DEFAULT NULL,
   `pull_cost` int DEFAULT NULL
@@ -82,18 +83,18 @@ CREATE TABLE `ingame_transaction_record` (
 -- Dumping data for table `ingame_transaction_record`
 --
 
-INSERT INTO ingame_transaction_record (player_id, pull_id, pulltime, pity_counter, pull_cost) values
-(10000007, 1, current_date(), 20, 100),
-(10000001, 4, DATE'2024/10/09', 19, 100), 
-(10000002, 16, DATE'2024-04-22', 13, 100),
-(10000003, 74, DATE'2024-06-04', 15, 100), 
-(10000004, 200, DATE'2024-07-09', 16, 100), 
-(10000005, 23, DATE'2024-09-28', 18, 100), 
-(10000006, 22, DATE'2024-11-03', 19, 100), 
-(10000007, 29, DATE'2024-03-30', 12, 100), 
-(10000008, 12, DATE'2024-05-11', 14, 100), 
-(10000009, 7, DATE'2024-08-19', 17, 100), 
-(10000010, 62, DATE'2024-08-15', 17, 100);
+INSERT INTO ingame_transaction_record (player_id, pull_id, char_id, pulltime, pity_counter, pull_cost) values
+(10000007, 1, 14, DATE '2022-12-25', 20, 100),
+(10000001, 2, 4, DATE'2024/10/09', 19, 100), 
+(10000002, 3, 10, DATE'2024-04-22', 13, 100),
+(10000003, 4, 9, DATE'2024-06-04', 15, 100), 
+(10000004, 5, 2, DATE'2024-07-09', 16, 100), 
+(10000005, 6, 7, DATE'2024-09-28', 18, 100), 
+(10000006, 7, 17, DATE'2024-11-03', 19, 100), 
+(10000007, 8, 15, DATE'2024-03-30', 21, 100), 
+(10000008, 9, 3, DATE'2024-05-11', 14, 100), 
+(10000009, 10, 12, DATE'2024-08-19', 17, 100), 
+(10000010, 11, 12, DATE'2024-08-15', 17, 100);
 
 LOCK TABLES `ingame_transaction_record` WRITE;
 /*!40000 ALTER TABLE `ingame_transaction_record` DISABLE KEYS */;
@@ -119,16 +120,17 @@ CREATE TABLE `player_items_record` (
 --
 
 INSERT INTO player_items_record (player_id, char_id, char_duplicates) values
-(10000001, 1, 0), 
-(10000002, 3, 5),
-(10000003, 4, 2), 
-(10000004, 5, 2), 
-(10000005, 3, 2), 
-(10000006, 7, 4), 
-(10000007, 0, 1), 
-(10000008, 3, 2), 
-(10000009, 9, 3), 
-(10000010, 2, 10);
+(10000007, 14, 1),
+(10000001, 4, 1), 
+(10000002, 10, 1),
+(10000003, 9, 1), 
+(10000004, 2, 1), 
+(10000005, 7, 1), 
+(10000006, 17, 1), 
+(10000007, 15, 1), 
+(10000008, 3, 1), 
+(10000009, 12, 1), 
+(10000010, 12, 1);
 
 LOCK TABLES `player_items_record` WRITE;
 /*!40000 ALTER TABLE `player_items_record` DISABLE KEYS */;
