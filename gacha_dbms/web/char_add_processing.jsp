@@ -158,7 +158,7 @@
                 Class.forName("com.mysql.cj.jdbc.Driver");
             Connection conn;
             //change the last param in getConnection() to your MySQL password :)
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gacha", "root", "root");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gacha", "root", "pass");
             System.out.print("Connection Successful!");
             PreparedStatement pstmt = conn.prepareStatement("SELECT COUNT(*) FROM character_record WHERE char_name = ?"); 
             pstmt.setString(1, v_char_name);

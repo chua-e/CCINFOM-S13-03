@@ -134,7 +134,6 @@
     
                 // Get the character name from the request
                 String v_char_name = request.getParameter("char_name");
-                out.println("Received char_name: " + v_char_name + ", ");
     
     try {
         // Initialize MySQL connection
@@ -170,7 +169,6 @@
     }
 
     // Output the result based on the status
-    out.println("status: " + status);
     
     if (status == 1) { 
 %>

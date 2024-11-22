@@ -1,11 +1,11 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="java.util.*, java.sql.*, java.time.LocalDate" %>
+<%@ page contentType="text/html" pageEncoding="UTF-8" %>
+<%@ page import="java.util.*, java.sql.*, java.time.LocalDate" %>
 <!DOCTYPE html>
 
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Account processing</title>
+        <title>Update a Character</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
@@ -27,16 +27,6 @@
 
             form {
                 position: relative;
-                h1 {
-                    font-family: "Roboto", sans-serif;
-                    font-weight: 700;
-                    font-style: italic;
-                    font-size: 20px;
-                }
-                
-                h1:first-of-type {
-                    margin-bottom: 5px;
-                }
                 background-color: #ffffff;
                 padding: 20px;
                 border: 2px solid #000000;
@@ -44,6 +34,13 @@
                 width: 300px;
                 text-align: center;
                 z-index: 2;
+            }
+
+            h1 {
+                font-family: "Roboto", sans-serif;
+                font-weight: 700;
+                font-style: italic;
+                font-size: 20px;
             }
 
             input[type="text"] {
@@ -90,46 +87,17 @@
                 transform: translateY(2px);
             }
 
-            .button {
-                display: inline-block;
-                margin: 10px;
-                padding: 5px 40px;
-                font-size: 13px;
-                text-decoration: none;
-                color: black;
-                background-color: #FFFFFF;
-                border: none;
-                border-radius: 5px;
-                box-shadow: 0 4px #000000;
-                cursor: pointer;
-                transition: background-color 0.3s, transform 0.2s;
-                text-align: center;
-                outline: 2px dotted #000000;
-            }
-
-            .button:hover {
-                background-color: #e8e8e8;
-                transform: scale(1.05);
-                outline: 2px solid #000000;
-            }
-            
-            .button:active {
-                background-color: #d1d1d1;
-                box-shadow: 0 2px #d1d1d1;
-                transform: translateY(2px);
-            }
-            
         </style>
     </head>
     <body>
         <form action="admin.html">
             <%
                 int status = 0;
-                String v_player_name = request.getParameter("player_name");
-                //out.println("Received player_name: " + v_player_name + ", ");
+                String v_char_name = request.getParameter("char_name");
+                out.println("Received char_name: " + v_char_name + ", ");
 
-                // Query to check if player exists
-                String query = "SELECT COUNT(*) FROM player_record WHERE player_name = ?";
+                // Query to check if the character exists
+                String query = "SELECT char_id FROM character_record WHERE char_name = ?";
 
                 try {
                     // Establish MySQL connection
@@ -137,33 +105,33 @@
                     Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gacha", "root", "pass");
                     System.out.print("Connection Successful!");
 
-                    // Prepare statement to check if the player exists
+                    // Prepare statement to check if the character exists
                     PreparedStatement pstmt = conn.prepareStatement(query);
-                    pstmt.setString(1, v_player_name);
+                    pstmt.setString(1, v_char_name);
 
                     ResultSet rst = pstmt.executeQuery();
 
-                    if (rst.next() && rst.getInt(1) > 0) {
-                        // If player exists, proceed with deletion
-                        pstmt.close();
-
-                        // Prepare DELETE statement to remove the player record
-                        pstmt = conn.prepareStatement("DELETE FROM player_record WHERE player_name = ?");
-                        pstmt.setString(1, v_player_name);
-                        pstmt.executeUpdate();
+                    if (rst.next()) {
+                        // Character exists, retrieve char_id
+                        int char_id = rst.getInt("char_id");
+                        
                         pstmt.close();
                         conn.close();
-                        status = 1; // Player record deleted successfully
+                        
+                        status = 1; // Character found, ready for update
+                        
+                        // Pass the char_id as a query parameter in the URL
+                        response.sendRedirect("upd_char2.html?char_id=" + char_id); // Redirect to update page with char_id
                     } else {
-                        // If player doesn't exist, set status to 2
+                        // Character doesn't exist
                         pstmt.close();
                         conn.close();
-                        status = 2; // Player not found
+                        status = 2; // Character not found
                     }
                 } catch (SQLException e) {
                     System.out.println(e.getMessage());
                     e.printStackTrace();
-                    status = -1; // Error during deletion process
+                    status = -1; // Error during processing
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                     e.printStackTrace();
@@ -173,21 +141,16 @@
                 // Output result based on the status
                 //out.println("status: " + status);
 
-                if (status == 1) { 
-%>
-        <h1>Player Deletion Successful!</h1>
-<% 
-    } else if (status == 2) { 
-%>
-        <h1>Player Not Found</h1>
+                if (status == 2) { 
+            %>
+        <h1>Character Not Found</h1>
 <% 
     } else { 
 %>
-        <h1>Player Deletion Failed</h1>
+        <h1>Character Update Failed</h1>
 <% 
     }
 %>
-            <input type="submit" value="Return to Admin Menu">
         </form>
     </body>
-</html>     
+</html>

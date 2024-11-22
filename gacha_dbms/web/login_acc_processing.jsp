@@ -23,9 +23,7 @@
                 
                 //out.println() lines are for debugging
                 String v_player_name = request.getParameter("player_name");
-                out.println("Received player_name: " + v_player_name + ", ");
                 rec.player_name = v_player_name;
-                out.println("Assigning player name as: " + rec.player_name + ", ");
                 
                 
                 int status = 0;
@@ -72,7 +70,6 @@
             status= -1;
         }
         
-                out.println("Status: "+ status);
                 
             if (status == 1) {
                 session.setAttribute("player_id", player_id);

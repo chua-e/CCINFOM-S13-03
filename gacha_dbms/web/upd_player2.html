@@ -1,11 +1,9 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="java.util.*, java.sql.*, java.time.LocalDate" %>
 <!DOCTYPE html>
-
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Account processing</title>
+        <title>Update Player Details</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
@@ -31,9 +29,9 @@
                     font-family: "Roboto", sans-serif;
                     font-weight: 700;
                     font-style: italic;
-                    font-size: 20px;
+                    font-size: 15px;
                 }
-                
+
                 h1:first-of-type {
                     margin-bottom: 5px;
                 }
@@ -46,7 +44,7 @@
                 z-index: 2;
             }
 
-            input[type="text"] {
+            input[type="text"], input[type="date"], input[type="number"] {
                 font-family: "Roboto", sans-serif;
                 font-weight: 300;
                 font-style: normal;
@@ -112,7 +110,7 @@
                 transform: scale(1.05);
                 outline: 2px solid #000000;
             }
-            
+
             .button:active {
                 background-color: #d1d1d1;
                 box-shadow: 0 2px #d1d1d1;
@@ -122,72 +120,30 @@
         </style>
     </head>
     <body>
-        <form action="admin.html">
-            <%
-                int status = 0;
-                String v_player_name = request.getParameter("player_name");
-                //out.println("Received player_name: " + v_player_name + ", ");
+        <form action="upd_acc_processing2.jsp" method="POST">
+            <h1>Update Player Details:</h1>
+            <input type="hidden" id="player_id" name="player_id">  <!-- Hidden field for player_id -->
 
-                // Query to check if player exists
-                String query = "SELECT COUNT(*) FROM player_record WHERE player_name = ?";
+            <label for="player_name">Player Name:</label>
+            <input type="text" id="player_name" name="player_name"><br>
 
-                try {
-                    // Establish MySQL connection
-                    Class.forName("com.mysql.cj.jdbc.Driver");
-                    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gacha", "root", "pass");
-                    System.out.print("Connection Successful!");
+            <label for="player_join_date">Player Join Date:</label>
+            <input type="date" id="player_join_date" name="player_join_date"><br>
 
-                    // Prepare statement to check if the player exists
-                    PreparedStatement pstmt = conn.prepareStatement(query);
-                    pstmt.setString(1, v_player_name);
+            <label for="account_bal">Account Balance:</label>
+            <input type="number" id="account_bal" name="account_bal" min="0" step="1"><br>
 
-                    ResultSet rst = pstmt.executeQuery();
-
-                    if (rst.next() && rst.getInt(1) > 0) {
-                        // If player exists, proceed with deletion
-                        pstmt.close();
-
-                        // Prepare DELETE statement to remove the player record
-                        pstmt = conn.prepareStatement("DELETE FROM player_record WHERE player_name = ?");
-                        pstmt.setString(1, v_player_name);
-                        pstmt.executeUpdate();
-                        pstmt.close();
-                        conn.close();
-                        status = 1; // Player record deleted successfully
-                    } else {
-                        // If player doesn't exist, set status to 2
-                        pstmt.close();
-                        conn.close();
-                        status = 2; // Player not found
-                    }
-                } catch (SQLException e) {
-                    System.out.println(e.getMessage());
-                    e.printStackTrace();
-                    status = -1; // Error during deletion process
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                    e.printStackTrace();
-                    status = -1; // General error
-                }
-
-                // Output result based on the status
-                //out.println("status: " + status);
-
-                if (status == 1) { 
-%>
-        <h1>Player Deletion Successful!</h1>
-<% 
-    } else if (status == 2) { 
-%>
-        <h1>Player Not Found</h1>
-<% 
-    } else { 
-%>
-        <h1>Player Deletion Failed</h1>
-<% 
-    }
-%>
-            <input type="submit" value="Return to Admin Menu">
+            <input type="submit" value="Update Player">
+            <a href="admin.html" class="button">Back</a>
         </form>
+
+        <script>
+            // Retrieve player_id from the URL query string
+            const urlParams = new URLSearchParams(window.location.search);
+            const playerId = urlParams.get('player_id');
+            
+            // Set the player_id in the hidden input field
+            document.getElementById('player_id').value = playerId;
+        </script>
     </body>
-</html>     
+</html>

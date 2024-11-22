@@ -28,7 +28,7 @@
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gacha", "root", "root");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gacha", "root", "pass");
 
             PreparedStatement updateStmt = conn.prepareStatement("UPDATE player_record SET account_bal = ? WHERE player_id = ?");
             updateStmt.setInt(1, balance);

@@ -126,7 +126,6 @@
             <%
     int status = 0;
     String v_pull_id = request.getParameter("pull_id");
-    out.println("Received pull_id: " + v_pull_id + ", ");
 
     // Query to check if record with the given pull_id exists
     String query = "SELECT COUNT(*) FROM ingame_transaction_record WHERE pull_id = ?";
@@ -171,7 +170,6 @@
     }
 
     // Output result based on the status
-    out.println("status: " + status);
 
     if (status == 1) {
 %>

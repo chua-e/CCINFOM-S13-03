@@ -5,7 +5,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Account processing</title>
+        <title>Update an Account</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
@@ -122,92 +122,67 @@
         </style>
     </head>
     <body>
-        <form action="player.html">
+        <form action="admin.html">
             <%
-
-                           int player_id = 0;
-                String player_name;
-                java.sql.Date player_join_date;
-                int account_bal; 
-    
+                int status = 0;
                 String v_player_name = request.getParameter("player_name");
                 //out.println("Received player_name: " + v_player_name + ", ");
-                player_name = v_player_name;
-                //out.println("Assigning player name as: " + player_name + ", ");
-                int status = 0;
-                
-                System.out.print("login player function reached");
-                String query = "SELECT COUNT(*) FROM player_record WHERE player_name = ?";
-    
-                    try{
-                    
-                        Class.forName("com.mysql.cj.jdbc.Driver");
-                        Connection conn;
-            //change the last param in getConnection() to your MySQL password 🙂
-                        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gacha", "root", "pass");
-                        System.out.print("Connection Successful!");
-                        PreparedStatement pstmt = conn.prepareStatement(query); 
-                        pstmt.setString(1, v_player_name);
-            
-                        ResultSet rst = pstmt.executeQuery();
-                        if (rst.next() && rst.getInt(1) > 0){
-                            System.out.println("There is a line");
-                            pstmt.close();
-                            conn.close();
-                            status= 2;
-                        }
-                        else {
-                            pstmt = conn.prepareStatement("SELECT MAX(player_id)+1 AS newID FROM player_record");
-                            rst = pstmt.executeQuery();
-                            while(rst.next() ){
-                                player_id = rst.getInt("newID");
-                            }
-                            pstmt = conn.prepareStatement("INSERT INTO player_record (player_id, player_name, player_join_date, account_bal) "
-                            + "VALUES (?, ?, ?, ?)");
 
-                            pstmt.setInt(1, player_id);
-                            pstmt.setString(2, v_player_name);
+                // Query to check if player exists
+                String query = "SELECT player_id, COUNT(*) FROM player_record WHERE player_name = ?";
 
-                            player_join_date = java.sql.Date.valueOf(LocalDate.now());
-                            pstmt.setDate(3, player_join_date);
+                try {
+                    // Establish MySQL connection
+                    Class.forName("com.mysql.cj.jdbc.Driver");
+                    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gacha", "root", "pass");
+                    System.out.print("Connection Successful!");
 
-                            account_bal = 1000;
-                            pstmt.setInt(4, account_bal);
+                    // Prepare statement to check if the player exists
+                    PreparedStatement pstmt = conn.prepareStatement(query);
+                    pstmt.setString(1, v_player_name);
 
-                            pstmt.executeUpdate();
+                    ResultSet rst = pstmt.executeQuery();
 
-                            pstmt.close();
-                            conn.close();
-                            status = 4;
-                        }
-                    } catch (SQLException e) {
-                        System.out.println(e.getMessage());
-                        e.printStackTrace();
-                        status = -1;
-                    } catch (Exception e) {
-                        System.out.println(e.getMessage());
-                        e.printStackTrace(); 
-                        status = -1;
+                    if (rst.next() && rst.getInt(2) > 0) {
+                        // Player exists, retrieve player_id
+                        int player_id = rst.getInt(1);
+                        
+                        pstmt.close();
+                        conn.close();
+                        
+                        status = 1; // Player found, ready for update
+                        
+                        // Pass the player_id as a query parameter in the URL
+                        response.sendRedirect("upd_player2.html?player_id=" + player_id); // Redirect to update page with player_id
+                    } else {
+                        // Player doesn't exist
+                        pstmt.close();
+                        conn.close();
+                        status = 2; // Player not found
                     }
-    
-            if (status == 4) {
-                request.setAttribute("player_name", v_player_name);
-
-            %>
-                <h1>Account Creation Successful!</h1>
-                <h2>Welcome, ${player_name}!</h2>
-            <%
-                } else if (status == 2 ) {
-            %>
-                <h1>Account with the same name Exists</h1>
-            <%
-                } else {
-            %>
-                <h1>create: Account Creation Failed</h1>
-            <%
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                    e.printStackTrace();
+                    status = -1; // Error during processing
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                    e.printStackTrace();
+                    status = -1; // General error
                 }
-            %>
-            <input type="submit" value="Return to Player Menu">
+                
+                // Output result based on the status
+                //out.println("status: " + status);
+
+                if (status == 2) { 
+%>
+        <h1>Player Not Found</h1>
+<% 
+    } else { 
+%>
+        <h1>Player Deletion Failed</h1>
+<% 
+    }
+%>
         </form>
     </body>
 </html>
