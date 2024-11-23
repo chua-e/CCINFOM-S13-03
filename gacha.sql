@@ -157,7 +157,7 @@ CREATE TABLE `player_record` (
 --
 
 INSERT INTO player_record (player_id, player_name, player_join_date, account_bal) values
-(10000001, 'Chua', '2022-02-03', 10000), 
+(10000001, 'Chua', '2022-02-03', 10000),  
 (10000002, 'Cheung', '2022-09-12', 1000), 
 (10000003, 'Casem', '2022-10-08', 500), 
 (10000004, 'SCP096', '2023-01-01', 2000), 
