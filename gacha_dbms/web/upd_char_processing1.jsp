@@ -112,7 +112,6 @@
                     ResultSet rst = pstmt.executeQuery();
 
                     if (rst.next()) {
-                        // Character exists, retrieve char_id
                         int char_id = rst.getInt("char_id");
                         
                         pstmt.close();
@@ -120,7 +119,6 @@
                         
                         status = 1; // Character found, ready for update
                         
-                        // Pass the char_id as a query parameter in the URL
                         response.sendRedirect("upd_char2.html?char_id=" + char_id); // Redirect to update page with char_id
                     } else {
                         // Character doesn't exist
@@ -131,15 +129,15 @@
                 } catch (SQLException e) {
                     System.out.println(e.getMessage());
                     e.printStackTrace();
-                    status = -1; // Error during processing
+                    status = -2; 
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                     e.printStackTrace();
-                    status = -1; // General error
+                    status = -1; 
                 }
 
                 // Output result based on the status
-                //out.println("status: " + status);
+                out.println("status: " + status);
 
                 if (status == 2) { 
             %>

@@ -126,10 +126,10 @@
             <%
                 int status = 0;
                 String v_player_name = request.getParameter("player_name");
-                //out.println("Received player_name: " + v_player_name + ", ");
+                out.println("Received player_name: " + v_player_name + ", ");
 
                 // Query to check if player exists
-                String query = "SELECT player_id, COUNT(*) FROM player_record WHERE player_name = ?";
+                String query = "SELECT player_id FROM player_record WHERE player_name = ?";
 
                 try {
                     // Establish MySQL connection
@@ -143,9 +143,9 @@
 
                     ResultSet rst = pstmt.executeQuery();
 
-                    if (rst.next() && rst.getInt(2) > 0) {
+                    if (rst.next()) {
                         // Player exists, retrieve player_id
-                        int player_id = rst.getInt(1);
+                        int player_id = rst.getInt("player_id");
                         
                         pstmt.close();
                         conn.close();
@@ -163,7 +163,7 @@
                 } catch (SQLException e) {
                     System.out.println(e.getMessage());
                     e.printStackTrace();
-                    status = -1; // Error during processing
+                    status = -2; // Error during processing
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                     e.printStackTrace();
@@ -171,7 +171,7 @@
                 }
                 
                 // Output result based on the status
-                //out.println("status: " + status);
+                out.println("status: " + status);
 
                 if (status == 2) { 
 %>
@@ -179,10 +179,11 @@
 <% 
     } else { 
 %>
-        <h1>Player Deletion Failed</h1>
+        <h1>Player Update Failed</h1>
 <% 
     }
 %>
         </form>
+        <a href="admin.html" class="button">Go Back to Admin Menu</a>
     </body>
 </html>

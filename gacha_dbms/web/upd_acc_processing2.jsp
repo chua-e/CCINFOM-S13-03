@@ -112,38 +112,29 @@
                 int status = 0;
                 String v_player_id = request.getParameter("player_id");
                 String v_player_name = request.getParameter("player_name");
-                String v_join_date = request.getParameter("player_join_date");
                 String v_account_bal = request.getParameter("account_bal");
 
-                // Check if player_id is provided
                 if (v_player_id == null || v_player_id.isEmpty()) { 
-                    status = -1;  // Invalid submission
+                    status = -1;  
                 } else {
-                    // SQL query to check if the player exists by ID
                     String query = "SELECT COUNT(*) FROM player_record WHERE player_id = ?";
 
                     try {
-                        // Establish MySQL connection
                         Class.forName("com.mysql.cj.jdbc.Driver");
                         Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gacha", "root", "root");
 
-                        // Prepare statement to check if the player exists by ID
                         PreparedStatement pstmt = conn.prepareStatement(query);
                         pstmt.setString(1, v_player_id);
 
                         ResultSet rst = pstmt.executeQuery();
 
                         if (rst.next() && rst.getInt(1) > 0) {
-                            // Player exists, now update the player's information
                             StringBuilder updateQuery = new StringBuilder("UPDATE player_record SET ");
                             List<String> updates = new ArrayList<>();
                             
                             // Allow player_name to be updated
                             if (v_player_name != null && !v_player_name.isEmpty()) {
                                 updates.add("player_name = ?");
-                            }
-                            if (v_join_date != null && !v_join_date.isEmpty()) {
-                                updates.add("player_join_date = ?");
                             }
                             if (v_account_bal != null && !v_account_bal.isEmpty()) {
                                 updates.add("account_bal = ?");
@@ -160,9 +151,6 @@
                             // Set parameters for the update
                             if (v_player_name != null && !v_player_name.isEmpty()) {
                                 updatePstmt.setString(paramIndex++, v_player_name);
-                            }
-                            if (v_join_date != null && !v_join_date.isEmpty()) {
-                                updatePstmt.setString(paramIndex++, v_join_date);
                             }
                             if (v_account_bal != null && !v_account_bal.isEmpty()) {
                                 updatePstmt.setDouble(paramIndex++, Double.parseDouble(v_account_bal));

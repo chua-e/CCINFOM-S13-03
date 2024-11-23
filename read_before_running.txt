@@ -1,0 +1,5 @@
+Before running the project, check all JSP files and find for this specific line
+
+"Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gacha", "root", "root");"
+
+The string at index 1 (2nd string) is the user name of the MySQL user and the string at index 2 (3rd String) is the password of said user, change accordingly for it to work on local devices.
