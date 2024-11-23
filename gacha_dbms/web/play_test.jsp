@@ -125,7 +125,7 @@
             if (invenResult.next()) {
                 char_dupli = invenResult.getInt("newCount");
                 if (invenResult.wasNull()) {
-                    char_dupli = 1; // Handle null case explicitly
+                    char_dupli = 1; 
                 }
             }
             
