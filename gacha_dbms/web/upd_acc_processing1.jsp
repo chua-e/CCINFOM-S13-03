@@ -1,13 +1,11 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.util.*, java.sql.*, java.time.LocalDate" %>
 <!DOCTYPE html>
-<!--
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit this template
--->
+
 <html>
     <head>
-        <title>Delete a Character</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Update an Account</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
@@ -33,7 +31,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
                     font-family: "Roboto", sans-serif;
                     font-weight: 700;
                     font-style: italic;
-                    font-size: 15px;
+                    font-size: 20px;
                 }
                 
                 h1:first-of-type {
@@ -121,26 +119,70 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
                 transform: translateY(2px);
             }
             
-/*            pre {
-                position: absolute;
-                top: 50%;
-                left: 10px;
-                transform: translateY(-50%);
-                font-family: "Roboto", sans-serif;  Match the rest of the page 
-                font-size: 16px;
-                margin: 0;
-                white-space: pre;
-                z-index: 1;
-            }*/
         </style>
     </head>
     <body>
-        <form action="char_del_processing.jsp">
-            <h1>Input character name:</h1>
-            <input type="text" id="char_name" name="char_name" required><br>
-            
-            <input type="submit" value="Delete Character">
-            <a href="admin.html" class="button">Back</a>
+        <form action="admin.html">
+            <%
+                int status = 0;
+                String v_player_name = request.getParameter("player_name");
+                //out.println("Received player_name: " + v_player_name + ", ");
+
+                // Query to check if player exists
+                String query = "SELECT player_id, COUNT(*) FROM player_record WHERE player_name = ?";
+
+                try {
+                    // Establish MySQL connection
+                    Class.forName("com.mysql.cj.jdbc.Driver");
+                    Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gacha", "root", "root");
+                    System.out.print("Connection Successful!");
+
+                    // Prepare statement to check if the player exists
+                    PreparedStatement pstmt = conn.prepareStatement(query);
+                    pstmt.setString(1, v_player_name);
+
+                    ResultSet rst = pstmt.executeQuery();
+
+                    if (rst.next() && rst.getInt(2) > 0) {
+                        // Player exists, retrieve player_id
+                        int player_id = rst.getInt(1);
+                        
+                        pstmt.close();
+                        conn.close();
+                        
+                        status = 1; // Player found, ready for update
+                        
+                        // Pass the player_id as a query parameter in the URL
+                        response.sendRedirect("upd_player2.html?player_id=" + player_id); // Redirect to update page with player_id
+                    } else {
+                        // Player doesn't exist
+                        pstmt.close();
+                        conn.close();
+                        status = 2; // Player not found
+                    }
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                    e.printStackTrace();
+                    status = -1; // Error during processing
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                    e.printStackTrace();
+                    status = -1; // General error
+                }
+                
+                // Output result based on the status
+                //out.println("status: " + status);
+
+                if (status == 2) { 
+%>
+        <h1>Player Not Found</h1>
+<% 
+    } else { 
+%>
+        <h1>Player Deletion Failed</h1>
+<% 
+    }
+%>
         </form>
     </body>
 </html>

@@ -1,11 +1,7 @@
 <!DOCTYPE html>
-<!--
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit this template
--->
 <html>
     <head>
-        <title>Add Balance</title>
+        <title>Update Player Details</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,7 +31,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
                     font-style: italic;
                     font-size: 15px;
                 }
-                
+
                 h1:first-of-type {
                     margin-bottom: 5px;
                 }
@@ -48,7 +44,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
                 z-index: 2;
             }
 
-            input[type="text"] {
+            input[type="text"], input[type="date"], input[type="number"] {
                 font-family: "Roboto", sans-serif;
                 font-weight: 300;
                 font-style: normal;
@@ -114,35 +110,40 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
                 transform: scale(1.05);
                 outline: 2px solid #000000;
             }
-            
+
             .button:active {
                 background-color: #d1d1d1;
                 box-shadow: 0 2px #d1d1d1;
                 transform: translateY(2px);
             }
             
-/*            pre {
-                position: absolute;
-                top: 50%;
-                left: 10px;
-                transform: translateY(-50%);
-                font-family: "Roboto", sans-serif;  Match the rest of the page 
-                font-size: 16px;
-                margin: 0;
-                white-space: pre;
-                z-index: 1;
-            }*/
         </style>
     </head>
     <body>
-        <h1> Choose Player </h1>
-            <select id="rarity" name="rarity">
-                <option value="S-tier"> S-tier</option>
-                <option value="A-tier"> A-Tier</option>
-                <option value="B-tier"> B-tier</option>
-            </select><br>
-        
-        <h1>Enter Amount to be Added:</h1>
-            <input type="text" id="char_name" name="char_name" required><br>
+        <form action="upd_acc_processing2.jsp" method="POST">
+            <h1>Update Player Details:</h1>
+            <input type="hidden" id="player_id" name="player_id">  <!-- Hidden field for player_id -->
+
+            <label for="player_name">Player Name:</label>
+            <input type="text" id="player_name" name="player_name"><br>
+
+            <label for="player_join_date">Player Join Date:</label>
+            <input type="date" id="player_join_date" name="player_join_date"><br>
+
+            <label for="account_bal">Account Balance:</label>
+            <input type="number" id="account_bal" name="account_bal" min="0" step="1"><br>
+
+            <input type="submit" value="Update Player">
+            <a href="admin.html" class="button">Back</a>
+        </form>
+
+        <script>
+            // Retrieve player_id from the URL query string
+            const urlParams = new URLSearchParams(window.location.search);
+            const playerId = urlParams.get('player_id');
+            
+            // Set the player_id in the hidden input field
+            document.getElementById('player_id').value = playerId;
+        </script>
     </body>
 </html>

@@ -152,7 +152,7 @@
         gachaResult = "Insufficient balance!";
     }
     
-    out.println("status: " + status);
+    //out.println("status: " + status);
 %>
 <!DOCTYPE html>
 <html>

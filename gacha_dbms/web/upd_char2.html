@@ -1,11 +1,7 @@
 <!DOCTYPE html>
-<!--
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit this template
--->
 <html>
     <head>
-        <title>Delete a Character</title>
+        <title>Update Character Details</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,7 +31,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
                     font-style: italic;
                     font-size: 15px;
                 }
-                
+
                 h1:first-of-type {
                     margin-bottom: 5px;
                 }
@@ -48,7 +44,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
                 z-index: 2;
             }
 
-            input[type="text"] {
+            input[type="text"], input[type="number"], input[type="date"] {
                 font-family: "Roboto", sans-serif;
                 font-weight: 300;
                 font-style: normal;
@@ -114,33 +110,62 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
                 transform: scale(1.05);
                 outline: 2px solid #000000;
             }
-            
+
             .button:active {
                 background-color: #d1d1d1;
                 box-shadow: 0 2px #d1d1d1;
                 transform: translateY(2px);
             }
             
-/*            pre {
-                position: absolute;
-                top: 50%;
-                left: 10px;
-                transform: translateY(-50%);
-                font-family: "Roboto", sans-serif;  Match the rest of the page 
-                font-size: 16px;
-                margin: 0;
-                white-space: pre;
-                z-index: 1;
-            }*/
         </style>
     </head>
-    <body>
-        <form action="char_del_processing.jsp">
-            <h1>Input character name:</h1>
-            <input type="text" id="char_name" name="char_name" required><br>
+    <body>  
+        <form action="upd_char_processing2.jsp" method="POST">
+            <h1>Update Character Details:</h1>
+            <input type="hidden" id="char_id" name="char_id">  <!-- Hidden field for char_id -->
+
+            <label for="char_name">Character Name:</label>
+            <input type="text" id="char_name" name="char_name"><br>
+
+            <h1>Rarity:</h1>
+            <select id="rarity" name="rarity">
+                <option value="S-tier">S-tier</option>
+                <option value="A-tier">A-tier</option>
+                <option value="B-tier">B-tier</option>
+            </select><br>
+
+            <label for="base_probability">Base Probability:</label>
+            <input type="number" id="base_probability" name="base_probability" step="0.01" min="0" max="1"><br>
+
+            <h1>Ability Type:</h1>
+            <select id="ability_type" name="ability_type">
+                <option value="Fire">Fire</option>
+                <option value="Water">Water</option>
+                <option value="Earth">Earth</option>
+                <option value="Air">Air</option>
+                <option value="Electric">Electric</option>
+            </select><br>
+
+            <h1>Class:</h1>
+            <select id="char_class" name="char_class">
+                <option value="Sword">Sword</option>
+                <option value="Archer">Archer</option>
+                <option value="Healer">Healer</option>
+                <option value="Catalyst">Catalyst</option>
+                <option value="Shield">Shield</option>
+            </select><br>
             
-            <input type="submit" value="Delete Character">
+            <input type="submit" value="Update Character">
             <a href="admin.html" class="button">Back</a>
         </form>
+
+        <script>
+            // Retrieve char_id from the URL query string
+            const urlParams = new URLSearchParams(window.location.search);
+            const charId = urlParams.get('char_id');
+            
+            // Set the char_id in the hidden input field
+            document.getElementById('char_id').value = charId;
+        </script>
     </body>
 </html>
