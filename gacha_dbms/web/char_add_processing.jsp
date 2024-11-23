@@ -127,7 +127,7 @@
         </style>
     </head>
     <body>
-        <jsp:useBean id="rec" class="charactermanagement.char_record" scope="session" />
+        
         <form action="admin.html">
             <%  
                       
@@ -136,20 +136,20 @@
                 
                 String v_char_name = request.getParameter("char_name");
                 out.println("Received player_name: " + v_char_name + ", ");
-                rec.char_name = v_char_name;
-                out.println("Assigning char name as: " + rec.char_name + ", ");
+                //rec.char_name = v_char_name;
+                //out.println("Assigning char name as: " + rec.char_name + ", ");
                 
                 String v_rarity = request.getParameter("rarity");
-                out.println("Received rarity: " + v_rarity + ", ");
-                rec.rarity = v_rarity;
+                //out.println("Received rarity: " + v_rarity + ", ");
+                //rec.rarity = v_rarity;
                 
                 String v_ability_type = request.getParameter("ability_type");
-                out.println("Received ability: " + v_ability_type + ", ");
-                rec.ability_type = v_ability_type;
+                //out.println("Received ability: " + v_ability_type + ", ");
+                //rec.ability_type = v_ability_type;
                 
                 String v_class = request.getParameter("char_class");
-                out.println("Received class: " + v_class + ", ");
-                rec.char_class = v_class;
+                //out.println("Received class: " + v_class + ", ");
+                //rec.char_class = v_class;
                 
                 
                 int status = 0;
@@ -212,7 +212,7 @@
             status = 0;
         } 
                 
-               out.println("status: " + status);
+               //out.println("status: " + status);
                 
                 if(status == 1){
             %>
