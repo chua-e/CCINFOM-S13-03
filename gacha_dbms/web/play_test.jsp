@@ -6,13 +6,22 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page language="java" session="true" %>
-<%@page import="java.util.*, java.sql.*" %>
+<%@page import="java.util.*, java.sql.*, java.time.LocalDate, playermanagement.*, charactermanagement.*" %>
 <%
     Integer player_id = (Integer) session.getAttribute("player_id");
     Integer acc_bal = (Integer) session.getAttribute("acc_bal");
 
     int balance = acc_bal;
-
+    int char_id = 0;
+    int status = -1;
+    
+    int pull_id = 1;
+    java.sql.Date pull_date;
+    int pitycounter = 1;
+    int pullcost = 100;
+    
+    int char_dupli = 0;
+    
     String gachaResult = "";
     if (request.getParameter("rollGacha") != null && balance >= 100) {
         balance -= 100;
@@ -30,32 +39,140 @@
                 session.setAttribute("acc_bal", balance);
             }
 
-            PreparedStatement charStmt = conn.prepareStatement("SELECT * FROM character_record ORDER BY RAND() LIMIT 1");
-            ResultSet charResult = charStmt.executeQuery();
+//            PreparedStatement charStmt = conn.prepareStatement("SELECT * FROM character_record ORDER BY RAND()*base_probability DESC LIMIT 1");
+//            ResultSet charResult = charStmt.executeQuery();
+
+            PreparedStatement charStmt = conn.prepareStatement(
+                "WITH NormalizedCharacters AS (SELECT char_id, char_name, rarity, ability_type, class, base_probability, " +
+                "base_probability / (SELECT SUM(base_probability) FROM character_record) AS normalized_probability " +
+                "    FROM character_record " +
+                "), CumulativeWeights AS ( " +
+                "    SELECT char_id, char_name, rarity, ability_type, class, normalized_probability, " +
+                "           SUM(normalized_probability) OVER (ORDER BY char_id) AS cumulative_probability " +
+                "    FROM NormalizedCharacters " +
+                ") " +
+                "SELECT char_id, char_name, rarity, ability_type, class " +
+                "FROM CumulativeWeights " +
+                "WHERE cumulative_probability >= ? " +
+                "ORDER BY cumulative_probability " +
+                "LIMIT 1"
+                );
+
+                double randomValue = Math.random();
+                charStmt.setDouble(1, randomValue);
+                ResultSet charResult = charStmt.executeQuery();
 
             if (charResult.next()) {
+                char_id = charResult.getInt("char_id");
                 gachaResult = String.format(
-                    "Character: %s\n, Rarity: %s\n, Ability Type: %s\n, Class: %s\n",
+                    "Character: %s\n, Rarity: %s-tier\n, Ability Type: %s\n, Class: %s\n",
                     charResult.getString("char_name"),
                     charResult.getString("rarity"),
                     charResult.getString("ability_type"),
                     charResult.getString("class")
                 );
+            
+            
             } else {
                 gachaResult = "No characters found!";
             }
+            
+           
+            
+            PreparedStatement  histStmt = conn.prepareStatement("SELECT MAX(pity_counter)+1 AS newPull FROM ingame_transaction_record"
+            + " WHERE player_id = ?");
+            histStmt.setInt(1, player_id);
+            ResultSet histResult = histStmt.executeQuery();
+            if (histResult.next()) {
+                pitycounter = histResult.getInt("newPull");
+                 if (histResult.wasNull()) { 
+                    pitycounter = 1;
+                }
+            } else {
+                pitycounter = 1; 
+            }
+            
+            histStmt = conn.prepareStatement("SELECT MAX(pull_id)+1 AS newID FROM ingame_transaction_record");
+            histResult = histStmt.executeQuery();
+            while(histResult.next()){
+                pull_id = histResult.getInt("newID");
+            }
+            
+            pull_date = java.sql.Date.valueOf(LocalDate.now());
+            
+//            out.println("player id: " + player_id);
+//            out.println("pull id: " + pull_id);
+//            out.println("char id: " + char_id);
+//            out.println("date: " + pull_date);
+//            out.println("pity ctr: " + pitycounter);
+//            out.println("cost: " + pullcost);
+            
+            histStmt = conn.prepareStatement("INSERT INTO ingame_transaction_record (player_id, pull_id, char_id, pulltime, pity_counter, pull_cost) "
+                            + "VALUES (?, ?, ?, ?, ?, ?)");
+            histStmt.setInt(1, player_id);
+            histStmt.setInt(2, pull_id);
+            histStmt.setInt(3, char_id);
+            histStmt.setDate(4, pull_date);
+            histStmt.setInt(5, pitycounter);
+            histStmt.setInt(6, pullcost);
+            
+            histStmt.executeUpdate();
+            
+            PreparedStatement invenStmt = conn.prepareStatement("SELECT MAX(char_duplicates)+1 AS newCount FROM player_items_record WHERE player_id = ? AND char_id = ?;");
+            invenStmt.setInt(1, player_id);
+            invenStmt.setInt(2, char_id);
+            ResultSet invenResult = invenStmt.executeQuery();
+            if (invenResult.next()) {
+                char_dupli = invenResult.getInt("newCount");
+                if (invenResult.wasNull()) {
+                    char_dupli = 1; // Handle null case explicitly
+                }
+            }
+            
+            PreparedStatement checkStmt = conn.prepareStatement("SELECT COUNT(*) FROM player_items_record WHERE player_id = ? AND char_id = ?");
+            checkStmt.setInt(1, player_id);
+            checkStmt.setInt(2, char_id);
+            ResultSet checkResult = checkStmt.executeQuery();
+            boolean recordExists = false;
 
+            if (checkResult.next()) {
+            recordExists = checkResult.getInt(1) > 0;
+            }
+
+            if (!recordExists) {
+                invenStmt = conn.prepareStatement("INSERT INTO player_items_record (player_id, char_id, char_duplicates) "
+                + "VALUES (?, ?, ?)");
+                invenStmt.setInt(1, player_id);
+                invenStmt.setInt(2, char_id);
+                invenStmt.setInt(3, char_dupli);
+            } else {
+                invenStmt = conn.prepareStatement("UPDATE player_items_record SET char_duplicates = ? WHERE player_id = ? AND char_id = ?");
+                invenStmt.setInt(1, char_dupli);
+                invenStmt.setInt(2, player_id);
+                invenStmt.setInt(3, char_id);
+            }
+
+            invenStmt.executeUpdate();
+                           
+            invenStmt.close();
+            checkStmt.close();
+            histStmt.close();
             updateStmt.close();
             charStmt.close();
             conn.close();
+            
+            status = 1;
 
         } catch (Exception e) {
+            status = 0;
             e.printStackTrace();
             gachaResult = "Error during gacha roll.";
         }
     } else if (request.getParameter("rollGacha") != null) {
         gachaResult = "Insufficient balance!";
     }
+    
+    //out.println("status: " + status);
 %>
 <!DOCTYPE html>
 <html>
@@ -208,6 +325,7 @@
           font-size: 20px;
           margin-bottom: 0px;
   }
+  
 }
 
   </style>
@@ -217,7 +335,13 @@
     <h2>Player ID: <%= player_id %>, Balance: <%= balance %></h2>
     <form method="POST">
         <button id="gachaButton" name="rollGacha">Roll!</button>
+        <% 
+            session.setAttribute("player_id", player_id);
+        %>
+        <a href="inventory.jsp" class="button"> Inventory</a>
+        <a href="player.html" class="button"> Back</a>
     </form>
+    
     <div class="gachapon-container">
         <div id="result" class="result-container">
             <%= gachaResult %>

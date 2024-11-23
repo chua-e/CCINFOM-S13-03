@@ -5,7 +5,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
 -->
 <html>
     <head>
-        <title>Add a Character</title>
+        <title>Delete a Transaction</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -135,37 +135,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
         </style>
     </head>
     <body>
-        <form action="char_add_processing.jsp">
-            <h1>Input character name:</h1>
-            <input type="text" id="char_name" name="char_name" required><br>
-            
-            <h1> Choose Character Rarity</h1>
-            <select id="rarity" name="rarity">
-                <option value="S"> S-tier</option>
-                <option value="A"> A-Tier</option>
-                <option value="B"> B-tier</option>
-            </select><br>
-            
-            <h1>Choose Character Ability</h1>
-            <select id="ability_type" name="ability_type">
-                <option value="Fire"> Fire</option>
-                <option value="Water"> Water</option>
-                <option value="Earth"> Earth</option>
-                <option value="Air"> Air</option>
-                <option value="Electric"> Electric</option>
-            </select><br>
-            
-            <h1>Choose Character Class</h1>
-            <select id="char_class" name="char_class">
-                <option value="Sword">Sword</option>
-                <option value="Archer">Archer</option>
-                <option value="Healer">Healer</option>
-                <option value="Catalyst">Catalyst</option>
-                <option value="Shield">Shield</option>
-            </select><br>
-            
-            <input type="submit" value="Create Character">
-            <a href="add.html" class="button">Back</a>
+        <form action="delete_transac_processing.jsp">
+            <h1>Input pull ID</h1>
+            <input type="text" id="pull_id" name ="pull_id" required>
+            <input type="submit" value="Delete Transaction">
+            <a href="delete.html" class="button">Back</a>
         </form>
     </body>
 </html>

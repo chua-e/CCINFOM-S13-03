@@ -1,13 +1,11 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.util.*, java.sql.*, java.time.LocalDate" %>
 <!DOCTYPE html>
-<!--
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit this template
--->
+
 <html>
     <head>
-        <title>Add a Character</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Account processing</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
@@ -33,7 +31,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
                     font-family: "Roboto", sans-serif;
                     font-weight: 700;
                     font-style: italic;
-                    font-size: 15px;
+                    font-size: 20px;
                 }
                 
                 h1:first-of-type {
@@ -121,51 +119,73 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
                 transform: translateY(2px);
             }
             
-/*            pre {
-                position: absolute;
-                top: 50%;
-                left: 10px;
-                transform: translateY(-50%);
-                font-family: "Roboto", sans-serif;  Match the rest of the page 
-                font-size: 16px;
-                margin: 0;
-                white-space: pre;
-                z-index: 1;
-            }*/
         </style>
     </head>
     <body>
-        <form action="char_add_processing.jsp">
-            <h1>Input character name:</h1>
-            <input type="text" id="char_name" name="char_name" required><br>
-            
-            <h1> Choose Character Rarity</h1>
-            <select id="rarity" name="rarity">
-                <option value="S"> S-tier</option>
-                <option value="A"> A-Tier</option>
-                <option value="B"> B-tier</option>
-            </select><br>
-            
-            <h1>Choose Character Ability</h1>
-            <select id="ability_type" name="ability_type">
-                <option value="Fire"> Fire</option>
-                <option value="Water"> Water</option>
-                <option value="Earth"> Earth</option>
-                <option value="Air"> Air</option>
-                <option value="Electric"> Electric</option>
-            </select><br>
-            
-            <h1>Choose Character Class</h1>
-            <select id="char_class" name="char_class">
-                <option value="Sword">Sword</option>
-                <option value="Archer">Archer</option>
-                <option value="Healer">Healer</option>
-                <option value="Catalyst">Catalyst</option>
-                <option value="Shield">Shield</option>
-            </select><br>
-            
-            <input type="submit" value="Create Character">
-            <a href="add.html" class="button">Back</a>
+        <form action="admin.html">
+            <%
+    int status = 0;
+    String v_pull_id = request.getParameter("pull_id");
+
+    // Query to check if record with the given pull_id exists
+    String query = "SELECT COUNT(*) FROM ingame_transaction_record WHERE pull_id = ?";
+
+    try {
+        // Establish MySQL connection
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/gacha", "root", "root");
+        System.out.print("Connection Successful!");
+
+        // Prepare statement to check if the pull_id exists
+        PreparedStatement pstmt = conn.prepareStatement(query);
+        pstmt.setString(1, v_pull_id);
+
+        ResultSet rst = pstmt.executeQuery();
+
+        if (rst.next() && rst.getInt(1) > 0) {
+            // If pull_id exists, proceed with deletion
+            pstmt.close();
+
+            // Prepare DELETE statement to remove the record with the given pull_id
+            pstmt = conn.prepareStatement("DELETE FROM ingame_transaction_record WHERE pull_id = ?");
+            pstmt.setString(1, v_pull_id);
+            pstmt.executeUpdate();
+            pstmt.close();
+            conn.close();
+            status = 1; // Record deleted successfully
+        } else {
+            // If pull_id doesn't exist, set status to 2
+            pstmt.close();
+            conn.close();
+            status = 2; // Record not found
+        }
+    } catch (SQLException e) {
+        System.out.println(e.getMessage());
+        e.printStackTrace();
+        status = -1; // Error during deletion process
+    } catch (Exception e) {
+        System.out.println(e.getMessage());
+        e.printStackTrace();
+        status = -1; // General error
+    }
+
+    // Output result based on the status
+
+    if (status == 1) {
+%>
+        <h1>Record Deletion Successful!</h1>
+<% 
+    } else if (status == 2) { 
+%>
+        <h1>Record Not Found</h1>
+<% 
+    } else { 
+%>
+        <h1>Record Deletion Failed</h1>
+<% 
+    }
+%>
+            <input type="submit" value="Return to Admin Menu">
         </form>
     </body>
-</html>
+</html>     
