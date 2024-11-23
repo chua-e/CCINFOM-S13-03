@@ -339,6 +339,7 @@
             session.setAttribute("player_id", player_id);
         %>
         <a href="inventory.jsp" class="button"> Inventory</a>
+        <a href="exchange.html" class="button"> Exchange</a>
         <a href="player.html" class="button"> Back</a>
     </form>
     
